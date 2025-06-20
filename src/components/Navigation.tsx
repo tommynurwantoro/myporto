@@ -55,6 +55,12 @@ export function Navigation() {
                 Education
               </a>
               <Link
+                to="/schedule"
+                className="text-blue-400 hover:text-blue-300 transition-colors"
+              >
+                Schedule
+              </Link>
+              <Link
                 to="/payme"
                 className="text-emerald-400 hover:text-emerald-300 transition-colors flex items-center gap-1"
               >

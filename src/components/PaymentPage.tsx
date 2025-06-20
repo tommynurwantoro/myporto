@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { Copy, Check } from 'lucide-react';
+import qrGopay from '../assets/qr-gopay.jpg';
+import qrBri from '../assets/qr-brimo.jpg';
 
 interface PaymentMethod {
   name: string;
@@ -14,21 +16,21 @@ export function PaymentPage() {
   const paymentMethods: PaymentMethod[] = [
     {
       name: "GoPay",
-      accountNumber: "0812-8740-9875",
+      accountNumber: "0852-5817-4772",
       accountName: "Tommy Nurwantoro",
-      qrImage: "/assets/qr-gopay.png"
-    },
-    {
-      name: "OVO",
-      accountNumber: "0812-8740-9875",
-      accountName: "Tommy Nurwantoro",
-      qrImage: "/assets/qr-ovo.png"
+      qrImage: qrGopay
     },
     {
       name: "Bank BCA",
-      accountNumber: "0123456789",
+      accountNumber: "1980005051",
       accountName: "Tommy Nurwantoro",
-      qrImage: "/assets/qr-bca.png"
+      qrImage: ""
+    },
+    {
+      name: "Bank BRI",
+      accountNumber: "004401093198507",
+      accountName: "Tommy Nurwantoro",
+      qrImage: qrBri
     }
   ];
 
@@ -55,18 +57,22 @@ export function PaymentPage() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {paymentMethods.map((method) => (
-            <div 
+            <div
               key={method.name}
               className="bg-gray-800/50 rounded-lg p-6 border border-gray-700 hover-card-effect"
             >
               <h2 className="text-xl font-bold mb-4 text-center gradient-text">{method.name}</h2>
-              
+
               <div className="bg-white p-4 rounded-lg mb-4">
-                <img 
-                  src={method.qrImage} 
-                  alt={`${method.name} QR Code`}
-                  className="w-full h-auto"
-                />
+                {method.qrImage ? (
+                  <img
+                    src={method.qrImage}
+                    alt={`${method.name} QR Code`}
+                    className="w-full h-auto"
+                  />
+                ) : (
+                  <div className="animate-pulse bg-gray-700 w-full aspect-square rounded" />
+                )}
               </div>
 
               <div className="space-y-2">

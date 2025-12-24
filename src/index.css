@@ -1,13 +1,19 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* 
+ * REQUIRED: Tailwind CSS v4 import - DO NOT REMOVE
+ * This is the new way to import Tailwind CSS in v4
+ */
+@import "tailwindcss";
 
+/* 
+ * Base Styles
+ */
 :root {
   color-scheme: dark;
 }
 
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
 }
 
 body {
@@ -20,13 +26,9 @@ body {
   background-color: #111827;
 }
 
-/* Smooth scrolling for anchor links */
-html {
-  scroll-behavior: smooth;
-  scroll-padding-top: 5rem;
-}
-
-/* Custom scrollbar */
+/* 
+ * Custom Scrollbar
+ */
 ::-webkit-scrollbar {
   width: 10px;
 }
@@ -42,16 +44,6 @@ html {
 
 ::-webkit-scrollbar-thumb:hover {
   background: #059669;
-}
-
-/* Hover effects for cards */
-.hover-card-effect {
-  transition: all 0.3s ease;
-}
-
-.hover-card-effect:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 30px -10px rgba(16, 185, 129, 0.3);
 }
 
 /* Gradient text animation */
@@ -76,6 +68,24 @@ html {
   }
 }
 
+/* Typing animation */
+.typing {
+  border-right: 2px solid #10b981;
+  animation: typing 1s steps(40) infinite;
+}
+
+@keyframes typing {
+  0% {
+    border-color: transparent;
+  }
+  50% {
+    border-color: #10b981;
+  }
+  100% {
+    border-color: transparent;
+  }
+}
+
 /* Glowing effect */
 .glow {
   position: relative;
@@ -89,35 +99,6 @@ html {
   filter: blur(5px);
   z-index: -1;
   animation: glow 2s linear infinite;
-}
-
-@keyframes glow {
-  0% {
-    opacity: 0.5;
-  }
-  50% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0.5;
-  }
-}
-
-/* Floating animation */
-.floating {
-  animation: floating 3s ease-in-out infinite;
-}
-
-@keyframes floating {
-  0% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
-  100% {
-    transform: translateY(0px);
-  }
 }
 
 /* Shine effect */
@@ -141,51 +122,6 @@ html {
   );
   transform: rotate(45deg);
   animation: shine 3s infinite;
-}
-
-@keyframes shine {
-  0% {
-    transform: translateX(-100%) rotate(45deg);
-  }
-  100% {
-    transform: translateX(100%) rotate(45deg);
-  }
-}
-
-/* Typing animation */
-.typing {
-  border-right: 2px solid #10b981;
-  animation: typing 1s steps(40) infinite;
-}
-
-@keyframes typing {
-  0% {
-    border-color: transparent;
-  }
-  50% {
-    border-color: #10b981;
-  }
-  100% {
-    border-color: transparent;
-  }
-}
-
-/* Scale on hover */
-.scale-hover {
-  transition: transform 0.3s ease;
-}
-
-.scale-hover:hover {
-  transform: scale(1.05);
-}
-
-/* Tilt effect */
-.tilt-effect {
-  transition: transform 0.3s ease;
-}
-
-.tilt-effect:hover {
-  transform: perspective(1000px) rotateX(5deg) rotateY(5deg);
 }
 
 /* Reveal animations */
@@ -254,4 +190,50 @@ html {
 .stagger-children.revealed > * {
   opacity: 1;
   transform: translateY(0);
+}
+
+/* Skip to content link for accessibility */
+.skip-to-content {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: #10b981;
+  color: #111827;
+  padding: 8px 16px;
+  text-decoration: none;
+  z-index: 100;
+}
+
+.skip-to-content:focus {
+  top: 0;
+}
+
+/* Modal animations */
+@keyframes modal-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes modal-scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes modal-backdrop-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }

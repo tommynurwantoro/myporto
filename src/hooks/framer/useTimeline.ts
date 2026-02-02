@@ -1,10 +1,12 @@
 import { useScroll, useTransform, type MotionValue } from 'framer-motion';
 import { useRef } from 'react';
 
+type ScrollOffset = ['start end', 'end start'];
+
 interface UseTimelineOptions {
   containerRef?: React.RefObject<HTMLElement | null>;
   itemCount: number;
-  offset?: Readonly<['start end', 'end start']>;
+  offset?: ScrollOffset;
 }
 
 interface UseTimelineReturn {
@@ -23,7 +25,7 @@ export function useTimeline({
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
-    offset: offset as any,
+    offset: offset,
   });
 
   // Map scroll progress to 0-itemCount range

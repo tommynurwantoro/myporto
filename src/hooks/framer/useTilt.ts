@@ -17,7 +17,6 @@ interface UseTiltReturn {
 
 export function useTilt({
   tiltRange = 8,
-  perspective = 1000,
   smoothing = 0.1,
 }: UseTiltOptions = {}): UseTiltReturn {
   const ref = useRef<HTMLDivElement>(null);

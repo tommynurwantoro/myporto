@@ -45,13 +45,9 @@ export function Timeline({ items, className = '' }: TimelineProps) {
 
       {/* Timeline items */}
       {items.map((item, index) => {
-        const isInView = useTransform(
-          scrollYProgress,
-          [index / items.length, (index + 1) / items.length],
-          [0, 1]
-        );
-
         const x = item.side === 'left' ? -30 : 30;
+        const progressStart = index / items.length;
+        const progressEnd = (index + 1) / items.length;
 
         return (
           <motion.div
@@ -65,11 +61,15 @@ export function Timeline({ items, className = '' }: TimelineProps) {
             {/* Connection dot */}
             <motion.div
               animate={{
-                scale: isInView.get() > 0.5 ? 1.5 : 1,
-                backgroundColor: isInView.get() > 0.5 ? '#34d399' : '#6b7280',
+                scale: scrollYProgress.get() >= progressStart && scrollYProgress.get() <= progressEnd ? 1.5 : 1,
+                backgroundColor: scrollYProgress.get() >= progressStart && scrollYProgress.get() <= progressEnd ? '#34d399' : '#6b7280',
               }}
               className="absolute left-1/2 transform -translate-x-1/2 w-4 h-4 rounded-full"
-              style={{ boxShadow: isInView.get() > 0.5 ? '0 0 20px rgba(52, 211, 153, 0.5)' : 'none' }}
+              style={{
+                boxShadow: scrollYProgress.get() >= progressStart && scrollYProgress.get() <= progressEnd
+                  ? '0 0 20px rgba(52, 211, 153, 0.5)'
+                  : 'none'
+              }}
             />
 
             {/* Content */}

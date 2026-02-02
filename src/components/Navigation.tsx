@@ -19,7 +19,7 @@ export function Navigation() {
 
   const { scrollY } = useScroll();
 
-  useMotionValueEvent(scrollY, "change", (latest) => {
+  useMotionValueEvent(scrollY, "change", () => {
     const sections = ['about', 'skills', 'projects', 'experience', 'education'];
     const current = sections.find(section => {
       const element = document.getElementById(section);

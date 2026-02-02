@@ -2,6 +2,7 @@ import { useInView } from '../../hooks/useInView';
 import { Section } from '../ui/Section';
 import { experiences } from '../../constants/data';
 import { cn } from '../../utils/cn';
+import type { Experience } from '../../types';
 
 export function Experience() {
   const [experienceRef, isExperienceInView] = useInView();
@@ -26,10 +27,23 @@ export function Experience() {
                 aria-hidden="true"
               />
               <div className="transition-all duration-500 p-4 rounded-lg group-hover:bg-gray-800/50">
-                <h3 className="text-xl font-bold gradient-text">{exp.title}</h3>
-                <p className="text-emerald-400/80">
-                  {exp.company} • {exp.period}
-                </p>
+                <div className="flex items-start gap-3">
+                  {exp.logo && (
+                    <div className="w-8 h-8 rounded flex-shrink-0 bg-white flex mt-2 items-center justify-center">
+                      <img
+                        src={exp.logo}
+                        alt={`${exp.company} logo`}
+                        className="w-full h-full object-contain"
+                      />
+                    </div>
+                  )}
+                  <div className="flex-1">
+                    <h3 className="text-xl font-bold gradient-text">{exp.title}</h3>
+                    <p className="text-emerald-400/80">
+                      {exp.company} • {exp.period}
+                    </p>
+                  </div>
+                </div>
               </div>
             </div>
           ))}

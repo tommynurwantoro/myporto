@@ -5,6 +5,11 @@ import blLogo from '../assets/logo-bl.png';
 import laLogo from '../assets/logo-la.png';
 import runsLogo from '../assets/logo-runs.png';
 import accountingPlusLogo from '../assets/logo-acc.svg';
+import runsExperienceLogo from '../assets/logo-runs.png';
+import laExperienceLogo from '../assets/logo-la.png';
+import blExperienceLogo from '../assets/logo-bl.png';
+import mitraisLogo from '../assets/logo-mitrais.png';
+import indocyberLogo from '../assets/logo-indocyber.jpg';
 
 export const projects: Project[] = [
   {
@@ -56,36 +61,43 @@ export const experiences: Experience[] = [
     title: "Head of Platform and Digital Product Engineering",
     company: "RUN System",
     period: "2023 - Present",
+    logo: runsExperienceLogo,
   },
   {
     title: "AVP Loyalty and Promo Engineering",
     company: "LinkAja",
     period: "2021 - 2023",
+    logo: laExperienceLogo,
   },
   {
     title: "Backend Engineer Specialist",
     company: "LinkAja",
     period: "2020 - 2021",
+    logo: laExperienceLogo,
   },
   {
     title: "Senior Software Engineer",
     company: "Bukalapak",
     period: "2018 - 2020",
+    logo: blExperienceLogo,
   },
   {
     title: "Software Engineer",
     company: "Mitrais",
     period: "2017 - 2018",
+    logo: mitraisLogo,
   },
   {
     title: ".NET Developer",
     company: "PT. Indocyber Global Technology",
     period: "2015 - 2017",
+    logo: indocyberLogo,
   },
   {
     title: "Bootcamp Programmer .NET",
     company: "PT. Indocyber Global Technology",
     period: "2015 - 2015",
+    logo: indocyberLogo,
   }
 ];
 

@@ -9,6 +9,7 @@ export interface Experience {
   title: string;
   company: string;
   period: string;
+  logo?: string;
 }
 
 export interface Education {

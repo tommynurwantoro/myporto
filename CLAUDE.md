@@ -77,6 +77,32 @@ The app uses multiple animation layers:
 3. **Custom animations:** Defined in `tailwind.config.js` (gradient animations, floats, pulses)
 4. **CSS animations:** Global styles in `src/index.css`
 
+## Framer Motion Integration
+
+The app uses Framer Motion for sophisticated animations:
+
+1. **Custom hooks:** Located in `src/hooks/framer/`
+   - `useTypewriter` - Cinematic text typing effects
+   - `useTilt` - 3D perspective tilt on mouse movement
+   - `useTimeline` - Scroll-synchronized timeline animations
+
+2. **Component patterns:**
+   - Use `motion.div` to wrap elements for animation
+   - `AnimatePresence` for enter/exit transitions
+   - `variants` for stagger children animations
+   - `whileInView` for scroll-triggered animations
+
+3. **Performance:**
+   - `viewport={{ once: true }}` prevents replay
+   - `layout` prop for smooth layout animations
+   - `useMotionValue` for tracked values (mouse, scroll)
+
+**When adding animations:**
+- Prefer `motion.*` components over CSS for complex sequences
+- Keep simple hover effects as CSS (better performance)
+- Always set `viewport={{ once: true }}` for scroll animations
+- Use `staggerChildren` for cascading effects
+
 ## Routing
 
 Uses React Router DOM v7 for client-side routing:

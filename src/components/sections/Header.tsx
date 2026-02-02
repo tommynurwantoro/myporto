@@ -1,8 +1,8 @@
 import { Terminal, Sparkles } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { motion, useMotionTemplate } from 'framer-motion';
 import profilePicture from '../../assets/profile.jpg';
 import { ParticleBackground } from '../ui/ParticleBackground';
-import { useTypewriter } from '../../hooks/framer';
+import { useTypewriter, useTilt } from '../../hooks/framer';
 
 export function Header() {
   const { displayedText: title } = useTypewriter({
@@ -10,6 +10,13 @@ export function Header() {
     speed: 50,
     delay: 300,
   });
+
+  const { rotateX, rotateY, scale, ref: tiltRef } = useTilt({
+    tiltRange: 8,
+    smoothing: 0.1,
+  });
+
+  const transform = useMotionTemplate`perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(${scale})`;
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -44,18 +51,26 @@ export function Header() {
         animate="visible"
       >
         <div className="flex flex-col md:flex-row items-center gap-12">
-          <motion.div variants={itemVariants}>
+          <motion.div
+            ref={tiltRef}
+            style={{ transform }}
+            variants={itemVariants}
+            className="relative"
+          >
             <div className="relative group">
-              <div className="w-48 h-48 md:w-64 md:h-64 rounded-full overflow-hidden border-4 border-emerald-400 transition-all duration-500 group-hover:scale-105 group-hover:rotate-6 relative">
+              <motion.div
+                className="w-48 h-48 md:w-64 md:h-64 rounded-full overflow-hidden border-4 border-emerald-400 relative"
+                whileHover={{ scale: 1.05 }}
+              >
                 <div className="w-full h-full bg-gray-800 flex items-center justify-center text-emerald-400">
                   <img
                     src={profilePicture}
                     alt="Tommy Nurwantoro - Backend Engineer"
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                    className="w-full h-full object-cover"
                     loading="eager"
                   />
                 </div>
-              </div>
+              </motion.div>
               <div className="absolute inset-0 rounded-full bg-emerald-400 opacity-0 group-hover:opacity-20 transition-opacity duration-500 pointer-events-none" />
               <Sparkles
                 className="absolute top-0 right-0 text-emerald-400 opacity-0 group-hover:opacity-100 transition-opacity duration-500 animate-bounce"

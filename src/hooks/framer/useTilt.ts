@@ -23,8 +23,6 @@ export function useTilt({
   const ref = useRef<HTMLDivElement>(null);
 
   // Reserve perspective for future 3D effects implementation
-  // @ts-ignore - unused for future 3D effects
-  const _perspective = perspective;
 
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);

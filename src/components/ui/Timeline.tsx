@@ -1,5 +1,5 @@
 import { motion, useTransform } from 'framer-motion';
-import { ReactNode, useRef } from 'react';
+import { ReactNode, useRef, useLayoutEffect, useState } from 'react';
 import { useTimeline } from '../../hooks/framer';
 
 interface TimelineItem {
@@ -15,6 +15,7 @@ interface TimelineProps {
 
 export function Timeline({ items, className = '' }: TimelineProps) {
   const containerRef = useRef<HTMLElement>(null);
+  const [height, setHeight] = useState(1000);
   const { scrollYProgress } = useTimeline({
     containerRef,
     itemCount: items.length,
@@ -23,12 +24,19 @@ export function Timeline({ items, className = '' }: TimelineProps) {
   const pathLength = useTransform(scrollYProgress, [0, 1], [0, 1]);
   const opacity = useTransform(scrollYProgress, [0, 0.1, 0.9, 1], [0, 1, 1, 0]);
 
+  // Calculate actual height from content
+  useLayoutEffect(() => {
+    if (containerRef.current) {
+      setHeight(containerRef.current.offsetHeight);
+    }
+  }, [items]);
+
   return (
     <section ref={containerRef} className={`relative ${className}`}>
       {/* Animated timeline line */}
-      <svg className="absolute left-1/2 transform -translate-x-1/2 h-full w-1" style={{ height: '100%' }}>
+      <svg className="absolute left-1/2 transform -translate-x-1/2 h-full w-1" style={{ height: `${height}px` }}>
         <motion.path
-          d="M 0 0 L 0 1000"
+          d={`M 0 0 L 0 ${height}`}
           stroke="url(#timelineGradient)"
           strokeWidth="4"
           fill="none"
@@ -56,7 +64,7 @@ export function Timeline({ items, className = '' }: TimelineProps) {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.5, delay: index * 0.1 }}
-            className="relative z-10 mb-8"
+            className="relative z-10 mb-20"
           >
             {/* Connection dot */}
             <motion.div
@@ -73,7 +81,7 @@ export function Timeline({ items, className = '' }: TimelineProps) {
             />
 
             {/* Content */}
-            <div className={`w-full md:w-5/12 ${item.side === 'left' ? 'mr-auto' : 'ml-auto'}`}>
+            <div className={`w-full md:w-5/12 ${item.side === 'left' ? 'ml-auto mr-0' : 'mr-auto ml-0'}`}>
               {item.content}
             </div>
           </motion.div>

@@ -3,7 +3,6 @@ import { motion } from 'framer-motion';
 import { useInView } from '../../hooks/useInView';
 import { ChevronLeft, ChevronRight, Folder } from 'lucide-react';
 import { Section } from '../ui/Section';
-import { Card } from '../ui/Card';
 import { IconButton } from '../ui/IconButton';
 import { Modal } from '../ui/Modal';
 import { Button } from '../ui/Button';
@@ -93,6 +92,10 @@ export function Projects() {
           </IconButton>
           <div className="overflow-hidden">
             <motion.div
+              variants={containerVariants}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-100px" }}
               className={cn(
                 'flex transition-transform duration-500 ease-in-out'
               )}

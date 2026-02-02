@@ -1,55 +1,52 @@
-import { useInView } from '../../hooks/useInView';
-import { Section } from '../ui/Section';
+import { motion } from 'framer-motion';
+import { Building, Calendar } from 'lucide-react';
+import { Timeline } from '../ui/Timeline';
 import { experiences } from '../../constants/data';
-import { cn } from '../../utils/cn';
-import type { Experience } from '../../types';
 
 export function Experience() {
-  const [experienceRef, isExperienceInView] = useInView();
+  const timelineItems = experiences.map((exp) => ({
+    id: exp.title,
+    side: 'left' as const,
+    content: (
+      <motion.div
+        whileHover={{ y: -6 }}
+        className="bg-gray-900 border border-gray-800 rounded-lg p-6 hover:border-emerald-400/50 transition-all duration-300"
+      >
+        <div className="flex items-start justify-between mb-2">
+          <h3 className="text-xl font-bold text-emerald-400">{exp.title}</h3>
+          <Building className="w-5 h-5 text-gray-400" />
+        </div>
+        <p className="text-lg font-semibold mb-2">{exp.company}</p>
+        <div className="flex items-center gap-2 text-gray-400 mb-3">
+          <Calendar className="w-4 h-4" />
+          <span>{exp.period}</span>
+        </div>
+        {exp.logo && (
+          <div className="w-8 h-8 rounded flex-shrink-0 bg-white flex items-center justify-center">
+            <img
+              src={exp.logo}
+              alt={`${exp.company} logo`}
+              className="w-full h-full object-contain"
+            />
+          </div>
+        )}
+      </motion.div>
+    ),
+  }));
 
   return (
-    <Section
-      id="experience"
-      className="py-16 bg-gray-900/30"
-      ref={experienceRef}
-      data-in-view={isExperienceInView}
-    >
-      <div className={cn('w-full', isExperienceInView ? 'revealed' : '', 'reveal-fade')}>
-        <h2 className="text-3xl font-bold mb-8 gradient-text">Professional Experience</h2>
-        <div className={cn('space-y-8 stagger-children', isExperienceInView ? 'revealed' : '')}>
-          {experiences.map((exp, index) => (
-            <div
-              key={index}
-              className="relative pl-8 border-l-2 border-emerald-400/50 transform transition-all duration-500 hover:pl-12 group"
-            >
-              <div
-                className="absolute w-4 h-4 bg-emerald-400/50 rounded-full -left-[9px] top-1 transition-all duration-500 group-hover:scale-125 group-hover:bg-emerald-400"
-                aria-hidden="true"
-              />
-              <div className="transition-all duration-500 p-4 rounded-lg group-hover:bg-gray-800/50">
-                <div className="flex items-start gap-3">
-                  {exp.logo && (
-                    <div className="w-8 h-8 rounded flex-shrink-0 bg-white flex mt-2 items-center justify-center">
-                      <img
-                        src={exp.logo}
-                        alt={`${exp.company} logo`}
-                        className="w-full h-full object-contain"
-                      />
-                    </div>
-                  )}
-                  <div className="flex-1">
-                    <h3 className="text-xl font-bold gradient-text">{exp.title}</h3>
-                    <p className="text-emerald-400/80">
-                      {exp.company} • {exp.period}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
+    <section className="w-full px-6 py-16">
+      <div className="max-w-6xl mx-auto">
+        <motion.h2
+          initial={{ opacity: 0, x: -20 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true }}
+          className="text-3xl font-bold mb-12 text-emerald-400"
+        >
+          Professional Experience
+        </motion.h2>
+        <Timeline items={timelineItems} />
       </div>
-    </Section>
+    </section>
   );
 }
-

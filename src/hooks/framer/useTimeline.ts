@@ -25,7 +25,7 @@ export function useTimeline({
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
-    offset: offset,
+    offset: offset as any,
   });
 
   // Map scroll progress to 0-itemCount range

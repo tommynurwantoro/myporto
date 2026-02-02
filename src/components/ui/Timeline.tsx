@@ -72,11 +72,25 @@ export function Timeline({ items, className = '' }: TimelineProps) {
                 scale: scrollYProgress.get() >= progressStart && scrollYProgress.get() <= progressEnd ? 1.5 : 1,
                 backgroundColor: scrollYProgress.get() >= progressStart && scrollYProgress.get() <= progressEnd ? '#34d399' : '#6b7280',
               }}
-              className="absolute left-1/2 transform -translate-x-1/2 w-4 h-4 rounded-full"
+              className="absolute left-1/2 top-6 transform -translate-x-1/2 w-4 h-4 rounded-full z-20"
               style={{
                 boxShadow: scrollYProgress.get() >= progressStart && scrollYProgress.get() <= progressEnd
                   ? '0 0 20px rgba(52, 211, 153, 0.5)'
                   : 'none'
+              }}
+            />
+
+            {/* Horizontal connector line */}
+            <motion.div
+              initial={{ scaleX: 0 }}
+              whileInView={{ scaleX: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: index * 0.1 + 0.2 }}
+              className="absolute top-7 h-0.5 bg-gradient-to-r from-emerald-400/50 to-gray-600/30"
+              style={{
+                left: item.side === 'left' ? 'calc(50% - 8px)' : '50%',
+                right: item.side === 'left' ? '50%' : 'calc(50% - 8px)',
+                transformOrigin: item.side === 'left' ? 'right' : 'left',
               }}
             />
 

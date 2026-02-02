@@ -17,10 +17,14 @@ interface UseTiltReturn {
 
 export function useTilt({
   tiltRange = 8,
-  _perspective = 1000,
+  perspective = 1000,
   smoothing = 0.1,
 }: UseTiltOptions = {}): UseTiltReturn {
   const ref = useRef<HTMLDivElement>(null);
+
+  // Reserve perspective for future 3D effects implementation
+  // @ts-ignore - unused for future 3D effects
+  const _perspective = perspective;
 
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);

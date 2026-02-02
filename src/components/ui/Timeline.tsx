@@ -73,7 +73,7 @@ export function Timeline({ items, className = '' }: TimelineProps) {
             />
 
             {/* Content */}
-            <div className="w-full md:w-5/12 ml-auto mr-auto">
+            <div className={`w-full md:w-5/12 ${item.side === 'left' ? 'mr-auto' : 'ml-auto'}`}>
               {item.content}
             </div>
           </motion.div>

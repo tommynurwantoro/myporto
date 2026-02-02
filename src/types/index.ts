@@ -16,6 +16,7 @@ export interface Education {
   degree: string;
   school: string;
   period: string;
+  logo?: string;
 }
 
 export interface Skill {

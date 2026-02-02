@@ -1,25 +1,27 @@
 import { motion } from 'framer-motion';
-import { GraduationCap, Calendar } from 'lucide-react';
+import { Calendar } from 'lucide-react';
 import { Timeline } from '../ui/Timeline';
 import { education } from '../../constants/data';
 
 export function Education() {
   const timelineItems = education.map((edu) => ({
     id: edu.degree,
-    side: 'right' as const,
+    side: 'left' as const,
     content: (
       <motion.div
         whileHover={{ y: -6 }}
-        className="bg-gray-900 border border-gray-800 rounded-lg p-6 hover:border-emerald-400/50 transition-all duration-300"
+        className="flex items-center gap-3"
       >
-        <div className="flex items-start justify-between mb-2">
+        {edu.logo && (
+          <img src={edu.logo} alt={`${edu.school} logo`} className="w-8 h-8 rounded flex-shrink-0" />
+        )}
+        <div>
           <h3 className="text-xl font-bold text-emerald-400">{edu.degree}</h3>
-          <GraduationCap className="w-5 h-5 text-gray-400" />
-        </div>
-        <p className="text-lg font-semibold mb-2">{edu.school}</p>
-        <div className="flex items-center gap-2 text-gray-400">
-          <Calendar className="w-4 h-4" />
-          <span>{edu.period}</span>
+          <p className="text-lg font-semibold text-gray-200">{edu.school}</p>
+          <div className="flex items-center gap-2 text-gray-400">
+            <Calendar className="w-4 h-4 flex-shrink-0" />
+            <span>{edu.period}</span>
+          </div>
         </div>
       </motion.div>
     ),

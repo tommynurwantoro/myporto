@@ -10,9 +10,10 @@ interface TimelineItem {
 interface TimelineProps {
   items: TimelineItem[];
   className?: string;
+  position?: 'left' | 'right';
 }
 
-export function Timeline({ items, className = '' }: TimelineProps) {
+export function Timeline({ items, className = '', position = 'left' }: TimelineProps) {
   const containerRef = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -22,7 +23,7 @@ export function Timeline({ items, className = '' }: TimelineProps) {
   return (
     <section ref={containerRef} className={`relative ${className}`}>
       {/* Continuous timeline line */}
-      <svg className="absolute left-1/3 transform -translate-x-1/2 h-full w-1.5 pointer-events-none" style={{ height: '100%' }}>
+      <svg className={`absolute ${position === 'left' ? 'left-0' : 'right-0'} h-full w-1.5 pointer-events-none`} style={{ height: '100%' }}>
         <defs>
           <linearGradient id="timelineGradient" x1="0%" y1="0%" x2="0%" y2="100%">
             <stop offset="0%" stopColor="#10b981" stopOpacity="0.2" />
@@ -67,7 +68,7 @@ export function Timeline({ items, className = '' }: TimelineProps) {
             {/* Connection dot */}
             <motion.div
               style={{ scale, opacity }}
-              className="absolute left-1/3 transform -translate-x-1/2 w-4 h-4 rounded-full bg-emerald-500 shadow-lg shadow-emerald-500/50"
+              className={`absolute ${position === 'left' ? 'left-0' : 'right-0'} w-4 h-4 rounded-full bg-emerald-500 shadow-lg shadow-emerald-500/50`}
             />
 
             {/* Content */}

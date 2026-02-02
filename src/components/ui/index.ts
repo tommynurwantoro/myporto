@@ -11,4 +11,5 @@ export { AnimatedBackground } from './AnimatedBackground';
 export { ParticleBackground } from './ParticleBackground';
 export { Modal } from './Modal';
 export type { ModalProps } from './Modal';
+export { Timeline } from './Timeline';
 

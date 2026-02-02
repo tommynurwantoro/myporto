@@ -5,25 +5,48 @@ export interface CardProps extends HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
   hover?: boolean;
   glow?: boolean;
+  glass?: boolean;
+  clickable?: boolean;
 }
 
 export const Card = forwardRef<HTMLDivElement, CardProps>(
-  ({ className, children, hover = true, glow = false, ...props }, ref) => {
+  ({ className, children, hover = false, glow = false, glass = false, clickable, ...props }, ref) => {
     return (
       <div
         ref={ref}
         className={cn(
-          'bg-gray-800 rounded-lg border border-gray-700',
-          'transition-all duration-300',
-          hover && 'hover:-translate-y-1 hover:shadow-[0_10px_30px_-10px_rgba(16,185,129,0.3)]',
-          glow && 'relative',
+          // Base styles
+          'rounded-xl border transition-all duration-300 ease-out',
+          // Glassmorphism effect
+          glass
+            ? 'glass glass-hover'
+            : 'bg-background-secondary border-surface-border',
+          // Hover effects
+          hover && [
+            'hover:-translate-y-1 hover:shadow-xl',
+            clickable && 'cursor-pointer',
+          ],
+          // Glow effect
+          glow && 'relative overflow-hidden group',
+          // Focus for clickable cards
+          clickable && [
+            'focus:outline-none focus:ring-2 focus:ring-accent-primary focus:ring-offset-2 focus:ring-offset-background-primary',
+            'active:scale-[0.98]',
+          ],
+          // Custom class
           className
         )}
         {...props}
       >
         {children}
         {glow && (
-          <div className="absolute inset-0 rounded-lg bg-gradient-to-r from-emerald-500/0 via-emerald-500/10 to-emerald-500/0 opacity-0 hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+          <div
+            className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+            style={{
+              background: 'radial-gradient(circle at center, rgba(16, 185, 129, 0.15) 0%, transparent 70%)',
+            }}
+            aria-hidden="true"
+          />
         )}
       </div>
     );
@@ -31,4 +54,3 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(
 );
 
 Card.displayName = 'Card';
-

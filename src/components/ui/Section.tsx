@@ -9,7 +9,13 @@ export const Section = forwardRef<HTMLElement, SectionProps>(
         ref={ref as React.RefObject<HTMLElement>}
         id={id}
         className={cn(
-          'w-full px-6',
+          // Base styles
+          'w-full',
+          // Spacing
+          'py-16 md:py-24',
+          // Container padding
+          'px-4 md:px-6',
+          // Custom class
           className
         )}
         data-in-view={inView}
@@ -22,4 +28,3 @@ export const Section = forwardRef<HTMLElement, SectionProps>(
 );
 
 Section.displayName = 'Section';
-

@@ -1,4 +1,4 @@
-import { useEffect, ReactNode, useState } from 'react';
+import { useEffect, ReactNode, useState, useRef } from 'react';
 import { X } from 'lucide-react';
 import { IconButton } from './IconButton';
 import { cn } from '../../utils/cn';
@@ -22,6 +22,8 @@ const sizeClasses = {
 export function Modal({ isOpen, onClose, title, children, size = 'lg' }: ModalProps) {
   const [isAnimating, setIsAnimating] = useState(false);
   const [shouldRender, setShouldRender] = useState(false);
+  const modalRef = useRef<HTMLDivElement>(null);
+  const titleId = `modal-${Math.random().toString(36).substring(2, 11)}`;
 
   // Handle open animation
   useEffect(() => {
@@ -35,13 +37,21 @@ export function Modal({ isOpen, onClose, title, children, size = 'lg' }: ModalPr
       });
       // Prevent body scroll when modal is open
       document.body.style.overflow = 'hidden';
+      // Focus trap
+      if (modalRef.current) {
+        const focusableElements = modalRef.current.querySelectorAll(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        );
+        const firstElement = focusableElements[0] as HTMLElement;
+        if (firstElement) firstElement.focus();
+      }
     } else {
       setIsAnimating(false);
       // Wait for close animation before unmounting
       const timer = setTimeout(() => {
         setShouldRender(false);
         document.body.style.overflow = '';
-      }, 300); // Match animation duration
+      }, 300);
       return () => clearTimeout(timer);
     }
   }, [isOpen]);
@@ -63,6 +73,39 @@ export function Modal({ isOpen, onClose, title, children, size = 'lg' }: ModalPr
     };
   }, [isOpen, onClose]);
 
+  // Focus trap within modal
+  useEffect(() => {
+    if (!isOpen || !modalRef.current) return;
+
+    const handleTab = (e: KeyboardEvent) => {
+      if (e.key !== 'Tab') return;
+
+      const focusableElements = modalRef.current?.querySelectorAll(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      );
+
+      if (!focusableElements || focusableElements.length === 0) return;
+
+      const firstElement = focusableElements[0] as HTMLElement;
+      const lastElement = focusableElements[focusableElements.length - 1] as HTMLElement;
+
+      if (e.shiftKey) {
+        if (document.activeElement === firstElement) {
+          e.preventDefault();
+          lastElement?.focus();
+        }
+      } else {
+        if (document.activeElement === lastElement) {
+          e.preventDefault();
+          firstElement?.focus();
+        }
+      }
+    };
+
+    document.addEventListener('keydown', handleTab);
+    return () => document.removeEventListener('keydown', handleTab);
+  }, [isOpen]);
+
   if (!shouldRender) return null;
 
   return (
@@ -74,7 +117,7 @@ export function Modal({ isOpen, onClose, title, children, size = 'lg' }: ModalPr
       )}
       role="dialog"
       aria-modal="true"
-      aria-labelledby={title ? 'modal-title' : undefined}
+      aria-labelledby={title ? titleId : undefined}
       onClick={(e) => {
         // Close when clicking backdrop
         if (e.target === e.currentTarget) {
@@ -85,7 +128,7 @@ export function Modal({ isOpen, onClose, title, children, size = 'lg' }: ModalPr
       {/* Backdrop */}
       <div
         className={cn(
-          'fixed inset-0 bg-black/70 backdrop-blur-sm transition-opacity duration-300',
+          'fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity duration-300',
           isAnimating ? 'opacity-100' : 'opacity-0'
         )}
         aria-hidden="true"
@@ -93,12 +136,17 @@ export function Modal({ isOpen, onClose, title, children, size = 'lg' }: ModalPr
 
       {/* Modal Content */}
       <div
+        ref={modalRef}
         className={cn(
           'relative z-50 w-full',
           sizeClasses[size],
-          'bg-gray-900 rounded-lg border border-gray-700',
+          // Glassmorphism effect
+          'glass',
+          'rounded-2xl border border-surface-border',
           'max-h-[90vh] overflow-hidden',
           'flex flex-col',
+          'shadow-2xl shadow-black/50',
+          // Animation
           'transition-all duration-300 ease-out',
           isAnimating
             ? 'opacity-100 scale-100 translate-y-0'
@@ -108,15 +156,15 @@ export function Modal({ isOpen, onClose, title, children, size = 'lg' }: ModalPr
       >
         {/* Header */}
         {title && (
-          <div className="flex items-center justify-between p-6 border-b border-gray-700">
-            <h2 id="modal-title" className="text-2xl font-bold gradient-text">
+          <div className="flex items-center justify-between p-6 border-b border-surface-border">
+            <h2 id={titleId} className="text-2xl font-heading font-semibold text-text-primary">
               {title}
             </h2>
             <IconButton
               onClick={onClose}
               aria-label="Close modal"
               size="sm"
-              className="text-gray-400 hover:text-emerald-400"
+              className="text-text-muted hover:text-accent-primary transition-colors"
             >
               <X className="w-5 h-5" aria-hidden="true" />
             </IconButton>
@@ -129,4 +177,3 @@ export function Modal({ isOpen, onClose, title, children, size = 'lg' }: ModalPr
     </div>
   );
 }
-

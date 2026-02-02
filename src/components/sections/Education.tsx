@@ -9,18 +9,24 @@ export function Education() {
     side: 'left' as const,
     content: (
       <motion.div
-        whileHover={{ y: -6 }}
-        className="flex items-center gap-3"
+        whileHover={{ y: -4 }}
+        className="group relative bg-gray-800/50 backdrop-blur-sm border border-gray-700/50 rounded-xl p-5 cursor-pointer transition-all duration-300 hover:border-emerald-400/50 hover:shadow-lg hover:shadow-emerald-400/10"
       >
-        {edu.logo && (
-          <img src={edu.logo} alt={`${edu.school} logo`} className="w-8 h-8 rounded flex-shrink-0" />
-        )}
-        <div>
-          <h3 className="text-xl font-bold text-emerald-400">{edu.degree}</h3>
-          <p className="text-lg font-semibold text-gray-200">{edu.school}</p>
-          <div className="flex items-center gap-2 text-gray-400">
-            <Calendar className="w-4 h-4 flex-shrink-0" />
-            <span>{edu.period}</span>
+        <div className="flex items-start gap-4">
+          {edu.logo && (
+            <div className="w-12 h-12 rounded-lg bg-gray-700/50 flex items-center justify-center flex-shrink-0">
+              <img src={edu.logo} alt={`${edu.school} logo`} className="w-8 h-8 object-contain" />
+            </div>
+          )}
+          <div className="flex-1 min-w-0">
+            <h3 className="text-xl font-bold text-emerald-400 mb-1 group-hover:text-emerald-300 transition-colors">
+              {edu.degree}
+            </h3>
+            <p className="text-lg font-semibold text-gray-200 mb-2">{edu.school}</p>
+            <div className="flex items-center gap-2 text-gray-400 text-sm">
+              <Calendar className="w-4 h-4 flex-shrink-0" />
+              <span>{edu.period}</span>
+            </div>
           </div>
         </div>
       </motion.div>

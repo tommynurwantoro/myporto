@@ -1,35 +1,28 @@
 import { motion } from 'framer-motion';
-import { Building, Calendar } from 'lucide-react';
+import { Calendar } from 'lucide-react';
 import { Timeline } from '../ui/Timeline';
 import { experiences } from '../../constants/data';
 
 export function Experience() {
   const timelineItems = experiences.map((exp) => ({
     id: exp.title,
-    side: 'left' as const,
+    side: 'right' as const,
     content: (
       <motion.div
         whileHover={{ y: -6 }}
-        className="bg-gray-900 border border-gray-800 rounded-lg p-6 hover:border-emerald-400/50 transition-all duration-300"
+        className="flex items-center gap-3"
       >
-        <div className="flex items-start justify-between mb-2">
-          <h3 className="text-xl font-bold text-emerald-400">{exp.title}</h3>
-          <Building className="w-5 h-5 text-gray-400" />
-        </div>
-        <p className="text-lg font-semibold mb-2">{exp.company}</p>
-        <div className="flex items-center gap-2 text-gray-400 mb-3">
-          <Calendar className="w-4 h-4" />
-          <span>{exp.period}</span>
-        </div>
         {exp.logo && (
-          <div className="w-8 h-8 rounded flex-shrink-0 bg-white flex items-center justify-center">
-            <img
-              src={exp.logo}
-              alt={`${exp.company} logo`}
-              className="w-full h-full object-contain"
-            />
-          </div>
+          <img src={exp.logo} alt={`${exp.company} logo`} className="w-8 h-8 rounded flex-shrink-0" />
         )}
+        <div>
+          <h3 className="text-xl font-bold text-emerald-400">{exp.title}</h3>
+          <p className="text-lg font-semibold text-gray-200">{exp.company}</p>
+          <div className="flex items-center gap-2 text-gray-400">
+            <Calendar className="w-4 h-4 flex-shrink-0" />
+            <span>{exp.period}</span>
+          </div>
+        </div>
       </motion.div>
     ),
   }));

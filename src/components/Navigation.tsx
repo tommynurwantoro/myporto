@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { MenuIcon, X } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
+import { motion, useScroll, useMotionValueEvent } from 'framer-motion';
 import { cn } from '../utils/cn';
 
 const navLinks = [
@@ -13,7 +14,21 @@ const navLinks = [
 
 export function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState('about');
   const location = useLocation();
+
+  const { scrollY } = useScroll();
+
+  useMotionValueEvent(scrollY, "change", (latest) => {
+    const sections = ['about', 'skills', 'projects', 'experience', 'education'];
+    const current = sections.find(section => {
+      const element = document.getElementById(section);
+      if (!element) return false;
+      const rect = element.getBoundingClientRect();
+      return rect.top <= 100 && rect.bottom >= 100;
+    });
+    if (current) setActiveSection(current);
+  });
 
   // Close menu when route changes
   useEffect(() => {
@@ -98,14 +113,25 @@ export function Navigation() {
               )}
             >
               {navLinks.map((link) => (
-                <a
-                  key={link.href}
-                  href={link.href}
-                  onClick={(e) => handleAnchorClick(e, link.href)}
-                  className="text-gray-400 hover:text-emerald-400 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:ring-offset-2 focus:ring-offset-gray-950 rounded px-2 py-1"
-                >
-                  {link.label}
-                </a>
+                <div key={link.href} className={cn(
+                  isMenuOpen ? 'w-full' : 'relative'
+                )}>
+                  <a
+                    href={link.href}
+                    onClick={(e) => handleAnchorClick(e, link.href)}
+                    className="text-gray-400 hover:text-emerald-400 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:ring-offset-2 focus:ring-offset-gray-950 rounded px-2 py-1"
+                  >
+                    {link.label}
+                  </a>
+                  {!isMenuOpen && activeSection === link.href.slice(1) && (
+                    <motion.div
+                      layoutId="activeNav"
+                      className="absolute bottom-0 left-0 right-0 h-0.5 bg-emerald-400"
+                      initial={false}
+                      transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                    />
+                  )}
+                </div>
               ))}
             </div>
           </div>

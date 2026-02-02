@@ -1,41 +1,43 @@
-import { useInView } from '../../hooks/useInView';
-import { Section } from '../ui/Section';
+import { motion } from 'framer-motion';
+import { GraduationCap, Calendar } from 'lucide-react';
+import { Timeline } from '../ui/Timeline';
 import { education } from '../../constants/data';
-import { cn } from '../../utils/cn';
 
 export function Education() {
-  const [educationRef, isEducationInView] = useInView();
+  const timelineItems = education.map((edu) => ({
+    id: edu.degree,
+    side: 'right' as const,
+    content: (
+      <motion.div
+        whileHover={{ y: -6 }}
+        className="bg-gray-900 border border-gray-800 rounded-lg p-6 hover:border-emerald-400/50 transition-all duration-300"
+      >
+        <div className="flex items-start justify-between mb-2">
+          <h3 className="text-xl font-bold text-emerald-400">{edu.degree}</h3>
+          <GraduationCap className="w-5 h-5 text-gray-400" />
+        </div>
+        <p className="text-lg font-semibold mb-2">{edu.school}</p>
+        <div className="flex items-center gap-2 text-gray-400">
+          <Calendar className="w-4 h-4" />
+          <span>{edu.period}</span>
+        </div>
+      </motion.div>
+    ),
+  }));
 
   return (
-    <Section
-      id="education"
-      className="py-16 bg-gray-900/30"
-      ref={educationRef}
-      data-in-view={isEducationInView}
-    >
-      <div className={cn('w-full', isEducationInView ? 'revealed' : '', 'reveal-fade')}>
-        <h2 className="text-3xl font-bold mb-8 gradient-text text-right">Education</h2>
-        <div className={cn('space-y-8 stagger-children', isEducationInView ? 'revealed' : '')}>
-          {education.map((edu, index) => (
-            <div
-              key={index}
-              className="relative pr-8 border-r-2 border-emerald-400/50 transform transition-all duration-500 hover:pr-12 group text-right"
-            >
-              <div
-                className="absolute w-4 h-4 bg-emerald-400/50 rounded-full -right-[9px] top-1 transition-all duration-500 group-hover:scale-125 group-hover:bg-emerald-400"
-                aria-hidden="true"
-              />
-              <div className="transition-all duration-500 p-4 rounded-lg group-hover:bg-gray-800/50">
-                <h3 className="text-xl font-bold gradient-text">{edu.degree}</h3>
-                <p className="text-emerald-400/80">
-                  {edu.school} • {edu.period}
-                </p>
-              </div>
-            </div>
-          ))}
-        </div>
+    <section className="w-full px-6 py-16">
+      <div className="max-w-6xl mx-auto">
+        <motion.h2
+          initial={{ opacity: 0, x: 20 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true }}
+          className="text-3xl font-bold mb-12 text-emerald-400"
+        >
+          Education
+        </motion.h2>
+        <Timeline items={timelineItems} />
       </div>
-    </Section>
+    </section>
   );
 }
-

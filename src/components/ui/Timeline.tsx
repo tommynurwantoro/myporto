@@ -68,7 +68,7 @@ export function Timeline({ items, className = '', position = 'left' }: TimelineP
             {/* Connection dot */}
             <motion.div
               style={{ scale, opacity }}
-              className={`absolute ${position === 'left' ? 'left-0' : 'right-0'} w-4 h-4 rounded-full bg-emerald-500 shadow-lg shadow-emerald-500/50`}
+              className={`absolute ${position === 'left' ? 'left-0' : 'right-0'} top-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-emerald-500 shadow-lg shadow-emerald-500/50`}
             />
 
             {/* Content */}

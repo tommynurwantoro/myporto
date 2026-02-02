@@ -4,7 +4,6 @@ import { useInView } from '../../hooks/useInView';
 import { ChevronLeft, ChevronRight, Folder, X } from 'lucide-react';
 import { Section } from '../ui/Section';
 import { IconButton } from '../ui/IconButton';
-import { Modal } from '../ui/Modal';
 import { Button } from '../ui/Button';
 import { projects } from '../../constants/data';
 import { PROJECTS } from '../../constants/theme';

@@ -1,4 +1,4 @@
-import { useMotionValue, useTransform, motion } from 'framer-motion';
+import { useMotionValue, useTransform, MotionValue } from 'framer-motion';
 import { useEffect, useRef } from 'react';
 
 interface UseTiltOptions {
@@ -8,16 +8,16 @@ interface UseTiltOptions {
 }
 
 interface UseTiltReturn {
-  rotateX: motion.MotionValue<number>;
-  rotateY: motion.MotionValue<number>;
-  scale: motion.MotionValue<number>;
-  ref: React.RefObject<HTMLDivElement>;
+  rotateX: MotionValue<number>;
+  rotateY: MotionValue<number>;
+  scale: MotionValue<number>;
+  ref: React.RefObject<HTMLDivElement | null>;
   reset: () => void;
 }
 
 export function useTilt({
   tiltRange = 8,
-  perspective = 1000,
+  _perspective = 1000,
   smoothing = 0.1,
 }: UseTiltOptions = {}): UseTiltReturn {
   const ref = useRef<HTMLDivElement>(null);

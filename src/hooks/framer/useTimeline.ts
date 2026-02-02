@@ -1,10 +1,10 @@
-import { useScroll, useTransform } from 'framer-motion';
+import { useScroll, useTransform, type MotionValue } from 'framer-motion';
 import { useRef } from 'react';
 
 interface UseTimelineOptions {
   containerRef?: React.RefObject<HTMLElement | null>;
   itemCount: number;
-  offset?: [string, string];
+  offset?: Readonly<['start end', 'end start']>;
 }
 
 interface UseTimelineReturn {
@@ -16,7 +16,7 @@ interface UseTimelineReturn {
 export function useTimeline({
   containerRef: externalRef,
   itemCount,
-  offset = ['start end', 'end start'] as const,
+  offset = ['start end', 'end start'],
 }: UseTimelineOptions): UseTimelineReturn {
   const internalRef = useRef<HTMLElement>(null);
   const containerRef = externalRef || internalRef;
@@ -36,5 +36,4 @@ export function useTimeline({
   };
 }
 
-import type { MotionValue } from 'framer-motion';
 export { useScroll, useTransform };

@@ -16,7 +16,7 @@ export function Header() {
               <div className="w-full h-full bg-gray-800 flex items-center justify-center text-emerald-400">
                 <img
                   src={profilePicture}
-                  alt="Tommy Nurwantoro - Backend Engineer"
+                  alt="Tommy Nurwantoro - Engineering Manager"
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                   loading="eager"
                 />
@@ -36,13 +36,14 @@ export function Header() {
             <h1 className="text-4xl md:text-6xl font-bold animate-slide-up">
               Tommy Nurwantoro
               <span className="block text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-emerald-500 to-emerald-600 py-3">
-                Backend Engineer
+                Engineering Manager
               </span>
             </h1>
             <p className="text-xl text-gray-400 max-w-2xl animate-fade-in">
-              Passionate about crafting robust, high-performance backend
-              solutions with clean architecture and scalable design patterns.
-              Specialized in Golang and distributed systems.
+              Passionate about building high-performing teams and delivering
+              exceptional products through technical leadership and scalable
+              architecture. Combining deep backend expertise with people management
+              to drive engineering excellence.
             </p>
           </div>
         </div>

@@ -14,7 +14,7 @@ export function Experience() {
       >
         <div className="flex items-start gap-4">
           {exp.logo && (
-            <div className="w-12 h-12 rounded-lg bg-gray-700/50 flex items-center justify-center flex-shrink-0">
+            <div className="w-12 h-12 rounded-lg bg-white flex items-center justify-center flex-shrink-0">
               <img src={exp.logo} alt={`${exp.company} logo`} className="w-8 h-8 object-contain" />
             </div>
           )}
@@ -40,7 +40,7 @@ export function Experience() {
           initial={{ opacity: 0, x: -20 }}
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
-          className="text-3xl font-bold mb-12 text-emerald-400"
+          className="text-3xl font-bold mb-12 gradient-text"
         >
           Professional Experience
         </motion.h2>

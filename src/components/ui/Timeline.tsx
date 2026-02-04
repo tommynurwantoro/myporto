@@ -23,29 +23,7 @@ export function Timeline({ items, className = '', position = 'left' }: TimelineP
   return (
     <section ref={containerRef} className={`relative ${className}`}>
       {/* Continuous timeline line */}
-      <svg className={`absolute ${position === 'left' ? 'left-0' : 'right-0'} h-full w-1.5 pointer-events-none`} style={{ height: '100%' }}>
-        <defs>
-          <linearGradient id="timelineGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stopColor="#10b981" stopOpacity="0.2" />
-            <stop offset="20%" stopColor="#10b981" stopOpacity="1" />
-            <stop offset="80%" stopColor="#10b981" stopOpacity="1" />
-            <stop offset="100%" stopColor="#10b981" stopOpacity="0.2" />
-          </linearGradient>
-        </defs>
-        <motion.line
-          x1="6"
-          y1="0"
-          x2="6"
-          y2="100%"
-          stroke="url(#timelineGradient)"
-          strokeWidth="3"
-          strokeLinecap="round"
-          initial={{ pathLength: 0 }}
-          whileInView={{ pathLength: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 1.5, ease: "easeInOut" }}
-        />
-      </svg>
+      <div className={`absolute ${position === 'left' ? 'left-2' : 'right-2'} top-8 bottom-8 w-px bg-gray-500`} />
 
       {/* Timeline items */}
       {items.map((item, index) => {
@@ -68,7 +46,7 @@ export function Timeline({ items, className = '', position = 'left' }: TimelineP
             {/* Connection dot */}
             <motion.div
               style={{ scale, opacity }}
-              className={`absolute ${position === 'left' ? 'left-0' : 'right-0'} top-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-emerald-500 shadow-lg shadow-emerald-500/50`}
+              className={`absolute ${position === 'left' ? 'left-0' : 'right-0'} top-8 w-4 h-4 rounded-full bg-emerald-500 shadow-lg shadow-emerald-500/50 z-20`}
             />
 
             {/* Content */}

@@ -1,55 +1,51 @@
-import { useInView } from '../../hooks/useInView';
-import { Section } from '../ui/Section';
+import { motion } from 'framer-motion';
+import { Calendar } from 'lucide-react';
+import { Timeline } from '../ui/Timeline';
 import { experiences } from '../../constants/data';
-import { cn } from '../../utils/cn';
-import type { Experience } from '../../types';
 
 export function Experience() {
-  const [experienceRef, isExperienceInView] = useInView();
+  const timelineItems = experiences.map((exp) => ({
+    id: exp.title,
+    side: 'right' as const,
+    content: (
+      <motion.div
+        whileHover={{ y: -4 }}
+        className="group relative bg-gray-800/50 backdrop-blur-sm border border-gray-700/50 rounded-xl p-5 cursor-pointer transition-all duration-300 hover:border-emerald-400/50 hover:shadow-lg hover:shadow-emerald-400/10"
+      >
+        <div className="flex items-start gap-4">
+          {exp.logo && (
+            <div className="w-12 h-12 rounded-lg bg-white flex items-center justify-center flex-shrink-0">
+              <img src={exp.logo} alt={`${exp.company} logo`} className="w-8 h-8 object-contain" />
+            </div>
+          )}
+          <div className="flex-1 min-w-0">
+            <h3 className="text-xl font-bold text-emerald-400 mb-1 group-hover:text-emerald-300 transition-colors">
+              {exp.title}
+            </h3>
+            <p className="text-lg font-semibold text-gray-200 mb-2">{exp.company}</p>
+            <div className="flex items-center gap-2 text-gray-400 text-sm">
+              <Calendar className="w-4 h-4 flex-shrink-0" />
+              <span>{exp.period}</span>
+            </div>
+          </div>
+        </div>
+      </motion.div>
+    ),
+  }));
 
   return (
-    <Section
-      id="experience"
-      className="py-16 bg-gray-900/30"
-      ref={experienceRef}
-      data-in-view={isExperienceInView}
-    >
-      <div className={cn('w-full', isExperienceInView ? 'revealed' : '', 'reveal-fade')}>
-        <h2 className="text-3xl font-bold mb-8 gradient-text">Professional Experience</h2>
-        <div className={cn('space-y-8 stagger-children', isExperienceInView ? 'revealed' : '')}>
-          {experiences.map((exp, index) => (
-            <div
-              key={index}
-              className="relative pl-8 border-l-2 border-emerald-400/50 transform transition-all duration-500 hover:pl-12 group"
-            >
-              <div
-                className="absolute w-4 h-4 bg-emerald-400/50 rounded-full -left-[9px] top-1 transition-all duration-500 group-hover:scale-125 group-hover:bg-emerald-400"
-                aria-hidden="true"
-              />
-              <div className="transition-all duration-500 p-4 rounded-lg group-hover:bg-gray-800/50">
-                <div className="flex items-start gap-3">
-                  {exp.logo && (
-                    <div className="w-8 h-8 rounded flex-shrink-0 bg-white flex mt-2 items-center justify-center">
-                      <img
-                        src={exp.logo}
-                        alt={`${exp.company} logo`}
-                        className="w-full h-full object-contain"
-                      />
-                    </div>
-                  )}
-                  <div className="flex-1">
-                    <h3 className="text-xl font-bold gradient-text">{exp.title}</h3>
-                    <p className="text-emerald-400/80">
-                      {exp.company} • {exp.period}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
+    <section className="w-full px-6 py-16">
+      <div className="max-w-4xl mx-auto">
+        <motion.h2
+          initial={{ opacity: 0, x: -20 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true }}
+          className="text-3xl font-bold mb-12 gradient-text"
+        >
+          Professional Experience
+        </motion.h2>
+        <Timeline items={timelineItems} position="left" />
       </div>
-    </Section>
+    </section>
   );
 }
-

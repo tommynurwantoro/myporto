@@ -1,18 +1,21 @@
 import { HTMLAttributes } from 'react';
+import { motion } from 'framer-motion';
 import { cn } from '../../utils/cn';
 
 export interface ProgressBarProps extends HTMLAttributes<HTMLDivElement> {
   label: string;
   percentage: number;
   showPercentage?: boolean;
+  index?: number;
 }
 
-export function ProgressBar({ 
-  label, 
-  percentage, 
+export function ProgressBar({
+  label,
+  percentage,
   showPercentage = true,
+  index = 0,
   className,
-  ...props 
+  ...props
 }: ProgressBarProps) {
   const clampedPercentage = Math.min(100, Math.max(0, percentage));
 
@@ -25,9 +28,12 @@ export function ProgressBar({
         )}
       </div>
       <div className="h-2 bg-gray-700 rounded-full overflow-hidden">
-        <div
-          className="h-full bg-emerald-400 rounded-full transition-all duration-1000 ease-out"
-          style={{ width: `${clampedPercentage}%` }}
+        <motion.div
+          initial={{ width: 0 }}
+          whileInView={{ width: `${clampedPercentage}%` }}
+          viewport={{ once: true }}
+          transition={{ duration: 1, delay: index * 0.1 }}
+          className="h-full bg-gradient-to-r from-emerald-400 to-emerald-600 rounded-full"
           role="progressbar"
           aria-valuenow={clampedPercentage}
           aria-valuemin={0}

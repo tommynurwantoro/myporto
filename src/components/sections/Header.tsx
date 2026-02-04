@@ -6,17 +6,17 @@ import { useTypewriter, useTilt } from '../../hooks/framer';
 
 export function Header() {
   const { displayedText: title } = useTypewriter({
-    text: 'Backend Engineer',
+    text: 'Engineering Manager',
     speed: 50,
     delay: 300,
   });
 
   const { rotateX, rotateY, scale, ref: tiltRef } = useTilt({
-    tiltRange: 8,
-    smoothing: 0.1,
+    tiltRange: 25,
+    smoothing: 0.15,
   });
 
-  const transform = useMotionTemplate`perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(${scale})`;
+  const transform = useMotionTemplate`perspective(1200px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(${scale})`;
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -59,13 +59,14 @@ export function Header() {
           >
             <div className="relative group">
               <motion.div
-                className="w-48 h-48 md:w-64 md:h-64 rounded-full overflow-hidden border-4 border-emerald-400 relative"
-                whileHover={{ scale: 1.05 }}
+                className="w-48 h-48 md:w-64 md:h-64 rounded-full overflow-hidden border-4 border-emerald-400 relative shadow-lg shadow-emerald-400/20"
+                whileHover={{ scale: 1.08 }}
+                transition={{ type: "spring", stiffness: 300, damping: 20 }}
               >
                 <div className="w-full h-full bg-gray-800 flex items-center justify-center text-emerald-400">
                   <img
                     src={profilePicture}
-                    alt="Tommy Nurwantoro - Backend Engineer"
+                    alt="Tommy Nurwantoro - Engineering Manager"
                     className="w-full h-full object-cover"
                     loading="eager"
                   />
@@ -95,9 +96,10 @@ export function Header() {
               </span>
             </h1>
             <p className="text-xl text-gray-400 max-w-2xl">
-              Passionate about crafting robust, high-performance backend
-              solutions with clean architecture and scalable design patterns.
-              Specialized in Golang and distributed systems.
+              Passionate about building high-performing teams and delivering
+              exceptional products through technical leadership and scalable
+              architecture. Combining deep backend expertise with people management
+              to drive engineering excellence.
             </p>
           </motion.div>
         </div>

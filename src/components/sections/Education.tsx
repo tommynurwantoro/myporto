@@ -34,7 +34,7 @@ export function Education() {
   }));
 
   return (
-    <section className="w-full px-6 py-16">
+    <section id="education" className="w-full px-6 py-16">
       <div className="max-w-4xl mx-auto">
         <motion.h2
           initial={{ opacity: 0, x: 20 }}

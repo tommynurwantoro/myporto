@@ -1,8 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { MenuIcon, X } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
-import { motion, useScroll, useMotionValueEvent } from 'framer-motion';
-import { cn } from '../utils/cn';
+import { motion, AnimatePresence, useScroll, useMotionValueEvent } from 'framer-motion';
 
 const navLinks = [
   { href: '#about', label: 'About' },
@@ -16,6 +15,7 @@ export function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('about');
   const location = useLocation();
+  const navRef = useRef<HTMLElement>(null);
 
   const { scrollY } = useScroll();
 
@@ -39,14 +39,14 @@ export function Navigation() {
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as HTMLElement;
-      if (isMenuOpen && !target.closest('nav')) {
+      if (navRef.current && !navRef.current.contains(target)) {
         setIsMenuOpen(false);
       }
     };
 
     if (isMenuOpen) {
-      document.addEventListener('click', handleClickOutside);
-      return () => document.removeEventListener('click', handleClickOutside);
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => document.removeEventListener('mousedown', handleClickOutside);
     }
   }, [isMenuOpen]);
 
@@ -75,6 +75,7 @@ export function Navigation() {
 
   return (
     <nav
+      ref={navRef}
       className="fixed top-0 left-0 right-0 z-50 bg-gray-950/95 backdrop-blur-md border-b border-gray-800/50"
       role="navigation"
       aria-label="Main navigation"
@@ -83,11 +84,36 @@ export function Navigation() {
         <div className="flex justify-between items-center">
           <Link
             to="/"
-            className="text-emerald-400 font-mono typing focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:ring-offset-2 focus:ring-offset-gray-950 rounded"
+            className="text-emerald-400 font-mono typing focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:ring-offset-2 focus:ring-offset-gray-950"
             aria-label="Home"
           >
             ~/portfolio
           </Link>
+
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex items-center gap-6">
+            {navLinks.map((link) => (
+              <div key={link.href} className="relative">
+                <a
+                  href={link.href}
+                  onClick={(e) => handleAnchorClick(e, link.href)}
+                  className="text-gray-400 hover:text-emerald-400 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:ring-offset-2 focus:ring-offset-gray-950 rounded px-2 py-1"
+                >
+                  {link.label}
+                </a>
+                {activeSection === link.href.slice(1) && (
+                  <motion.div
+                    layoutId="activeNav"
+                    className="absolute bottom-0 left-0 right-0 h-0.5 bg-emerald-400"
+                    initial={false}
+                    transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                  />
+                )}
+              </div>
+            ))}
+          </div>
+
+          {/* Mobile Menu Button */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             className="md:hidden text-gray-400 hover:text-emerald-400 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:ring-offset-2 focus:ring-offset-gray-950 rounded p-1"
@@ -97,45 +123,34 @@ export function Navigation() {
           >
             {isMenuOpen ? <X className="w-6 h-6" /> : <MenuIcon className="w-6 h-6" />}
           </button>
-          <div
-            id="mobile-menu"
-            className={cn(
-              'md:block',
-              isMenuOpen
-                ? 'absolute top-full left-0 right-0 bg-gray-900 border-b border-gray-800 p-4'
-                : 'hidden'
-            )}
-          >
-            <div
-              className={cn(
-                'flex gap-6',
-                isMenuOpen ? 'flex-col items-start' : 'flex-row items-center'
-              )}
+        </div>
+
+        {/* Mobile Menu */}
+        <AnimatePresence>
+          {isMenuOpen && (
+            <motion.div
+              id="mobile-menu"
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.2 }}
+              className="md:hidden border-t border-gray-800 pt-4 pb-2"
             >
-              {navLinks.map((link) => (
-                <div key={link.href} className={cn(
-                  isMenuOpen ? 'w-full' : 'relative'
-                )}>
+              <div className="flex flex-col gap-2">
+                {navLinks.map((link) => (
                   <a
+                    key={link.href}
                     href={link.href}
                     onClick={(e) => handleAnchorClick(e, link.href)}
-                    className="text-gray-400 hover:text-emerald-400 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:ring-offset-2 focus:ring-offset-gray-950 rounded px-2 py-1"
+                    className="text-gray-400 hover:text-emerald-400 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:ring-offset-2 focus:ring-offset-gray-950 rounded px-2 py-2 text-lg"
                   >
                     {link.label}
                   </a>
-                  {!isMenuOpen && activeSection === link.href.slice(1) && (
-                    <motion.div
-                      layoutId="activeNav"
-                      className="absolute bottom-0 left-0 right-0 h-0.5 bg-emerald-400"
-                      initial={false}
-                      transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                    />
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
+                ))}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </nav>
   );

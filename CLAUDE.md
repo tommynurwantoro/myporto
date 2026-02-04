@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a modern portfolio website for Tommy Nurwantoro, a Backend Engineer. It's a single-page application (SPA) built with React 19, TypeScript, Vite, and Tailwind CSS v4, featuring a dark theme with emerald accents, smooth animations, and interactive components.
+This is a modern portfolio website for Tommy Nurwantoro, an Engineering Manager. It's a single-page application (SPA) built with React 19, TypeScript, Vite, Framer Motion, and Tailwind CSS v4, featuring a dark theme with emerald accents, smooth animations, and interactive components.
 
 **Key Architecture:**
 - **Component organization:** Reusable UI components in `src/components/ui/` and page-specific sections in `src/components/sections/`
@@ -72,36 +72,54 @@ These compose the main page:
 
 The app uses multiple animation layers:
 
-1. **Scroll-triggered animations:** The `useInView` hook (src/hooks/useInView.ts) uses Intersection Observer to add `data-in-view` attributes when elements enter viewport
-2. **Mouse-tracking:** `AnimatedBackground` follows mouse position (managed in App.tsx state)
-3. **Custom animations:** Defined in `tailwind.config.js` (gradient animations, floats, pulses)
-4. **CSS animations:** Global styles in `src/index.css`
+1. **Framer Motion animations:** Primary animation system for sophisticated effects
+   - Typewriter effects on headings
+   - 3D tilt effects on hover
+   - Staggered entrance animations with variants
+   - Scroll-synchronized timeline animations
+2. **Scroll-triggered animations:** The `useInView` hook (src/hooks/useInView.ts) uses Intersection Observer to add `data-in-view` attributes when elements enter viewport (used in Projects component)
+3. **Mouse-tracking:** `AnimatedBackground` follows mouse position (managed in App.tsx state)
+4. **Custom animations:** Defined in `tailwind.config.js` (gradient animations, floats, pulses)
+5. **CSS animations:** Global styles in `src/index.css` (gradient-text animation)
 
 ## Framer Motion Integration
 
 The app uses Framer Motion for sophisticated animations:
 
 1. **Custom hooks:** Located in `src/hooks/framer/`
-   - `useTypewriter` - Cinematic text typing effects
+   - `useTypewriter` - Cinematic text typing effects with cursor
+     - Parameters: `text`, `speed` (default 50ms), `delay`, `loop`
+     - Returns: `displayedText`, `isTyping`, `isComplete`, `reset`
+     - Example: Used in Header for typing "Engineering Manager" title
    - `useTilt` - 3D perspective tilt on mouse movement
+     - Parameters: `tiltRange` (default 8deg), `smoothing` (default 0.1)
+     - Returns: `rotateX`, `rotateY`, `scale` MotionValues, `ref`, `reset`
+     - Use with `useMotionTemplate` for transform string
+     - Example: Used on profile picture for interactive 3D effect
    - `useTimeline` - Scroll-synchronized timeline animations
+     - Parameters: `containerRef`, `itemCount`, `offset`
+     - Returns: `progress` (0 to itemCount), `scrollYProgress`, `containerRef`
+     - Maps scroll position to item progress for multi-step animations
 
 2. **Component patterns:**
    - Use `motion.div` to wrap elements for animation
    - `AnimatePresence` for enter/exit transitions
    - `variants` for stagger children animations
    - `whileInView` for scroll-triggered animations
+   - `useMotionTemplate` for dynamic transform strings combining MotionValues
 
 3. **Performance:**
    - `viewport={{ once: true }}` prevents replay
    - `layout` prop for smooth layout animations
    - `useMotionValue` for tracked values (mouse, scroll)
+   - `requestAnimationFrame` in useTilt for smooth 60fps updates
 
 **When adding animations:**
 - Prefer `motion.*` components over CSS for complex sequences
 - Keep simple hover effects as CSS (better performance)
 - Always set `viewport={{ once: true }}` for scroll animations
 - Use `staggerChildren` for cascading effects
+- Use MotionValues with `useTransform` for derived values
 
 ## Routing
 
@@ -123,6 +141,7 @@ Uses React Router DOM v7 for client-side routing:
 - **React 19** - Latest React with concurrent features
 - **Vite 7** - Build tool and dev server (not Webpack)
 - **TypeScript 5.9** - Strict type checking with separate configs for app and Node.js
+- **Framer Motion** - Production-ready motion library for React (animations, gestures, transitions)
 - **Tailwind CSS 4** - Latest version with PostCSS integration
 - **Lucide React** - Icon library (icons are imported as components)
 
@@ -135,13 +154,15 @@ Uses React Router DOM v7 for client-side routing:
 ## Key Patterns
 
 1. **State management:** Local React state (no Redux/Zustand)
-2. **Data flow:** Props drilling for component communication
-3. **Icons:** Import from `lucide-react` as components
-4. **Type imports:** Use `import type { }` for type-only imports
-5. **Ref forwarding:** Components use `React.forwardRef` when refs are needed
+2. **Animation state:** Framer Motion hooks (useTypewriter, useTilt, useTimeline) for complex animations
+3. **Data flow:** Props drilling for component communication
+4. **Icons:** Import from `lucide-react` as components
+5. **Type imports:** Use `import type { }` for type-only imports
+6. **Ref forwarding:** Components use `React.forwardRef` when refs are needed
+7. **Motion values:** Use `useMotionValue` and `useTransform` for derived animation values
 
 ## Future Development
 
-The following empty directories exist for planned features:
+The following directories exist for planned features:
 - **`src/components/modern/`** - Reserved for modernized/refactored components
-- **`src/hooks/gsap/`** - Reserved for GSAP (GreenSock) animation hooks (currently the app uses CSS animations and Intersection Observer)
+- **`src/hooks/gsap/`** - Reserved for GSAP (GreenSock) animation hooks (currently the app uses Framer Motion for animations)

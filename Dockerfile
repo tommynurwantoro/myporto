@@ -10,10 +10,20 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install dependencies
-RUN npm ci --only=production=false
+RUN npm ci
 
 # Copy source code
 COPY . .
+
+# Vite embeds VITE_* variables at build time — pass these when building the image:
+#   docker build --build-arg VITE_GOOGLE_CLIENT_ID=... --build-arg VITE_API_BASE_URL=... .
+ARG VITE_GOOGLE_CLIENT_ID
+ARG VITE_API_BASE_URL=/api
+ARG VITE_VERIFY_BASE_URL
+
+ENV VITE_GOOGLE_CLIENT_ID=$VITE_GOOGLE_CLIENT_ID
+ENV VITE_API_BASE_URL=$VITE_API_BASE_URL
+ENV VITE_VERIFY_BASE_URL=$VITE_VERIFY_BASE_URL
 
 # Build the application
 RUN npm run build
@@ -21,28 +31,8 @@ RUN npm run build
 # Stage 2: Production stage
 FROM nginx:alpine AS production
 
-# Copy custom nginx configuration
 COPY --from=builder /app/dist /etc/nginx/html
-
-# Copy custom nginx config (optional, creates a basic SPA config)
-RUN echo 'server { \
-    listen 3001; \
-    server_name localhost; \
-    location / { \
-        root /etc/nginx/html; \
-        index index.html index.htm; \
-        try_files $uri $uri/ /index.html; \
-    } \
-    location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg)$ { \
-        expires 1y; \
-        add_header Cache-Control "public, immutable"; \
-    } \
-    gzip on; \
-    gzip_vary on; \
-    gzip_min_length 1024; \
-    gzip_comp_level 6; \
-    gzip_types text/plain text/css text/xml text/javascript application/javascript application/xml+rss application/json; \
-}' > /etc/nginx/conf.d/default.conf
+COPY nginx/default.conf /etc/nginx/conf.d/default.conf
 
 # Expose port 3001
 EXPOSE 3001

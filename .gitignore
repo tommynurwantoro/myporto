@@ -11,6 +11,13 @@ node_modules
 dist
 dist-ssr
 *.local
+.env
+.env.*
+!.env.example
+
+# API uploads
+api/uploads/
+uploads/
 
 # Editor directories and files
 .vscode/*
@@ -26,5 +33,5 @@ dist-ssr
 # Git worktrees
 .worktrees/
 .claude/
+.omc/
 CLAUDE.md
-docs/

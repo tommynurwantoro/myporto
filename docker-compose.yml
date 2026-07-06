@@ -1,0 +1,70 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: myporto
+      POSTGRES_PASSWORD: myporto
+      POSTGRES_DB: myporto
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U myporto"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  api:
+    image: registry.tommynurwantoro.com/myporto-api:latest
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    expose:
+      - "8080"
+    environment:
+      PORT: "8080"
+      DATABASE_URL: ${DATABASE_URL:-postgres://myporto:myporto@postgres:5432/myporto?sslmode=disable}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:?Set GOOGLE_CLIENT_ID in .env}
+      JWT_SECRET: ${JWT_SECRET:?Set JWT_SECRET in .env}
+      ALLOWED_SIGNER_EMAILS: ${ALLOWED_SIGNER_EMAILS:-tommy.nurwantoro@gmail.com}
+      STORAGE_PATH: /app/uploads
+      CORS_ORIGIN: ${CORS_ORIGIN:-https://tommynurwantoro.com}
+      VERIFY_BASE_URL: ${VERIFY_BASE_URL:-https://tommynurwantoro.com}
+    volumes:
+      - uploads:/app/uploads
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:8080/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+    restart: unless-stopped
+
+  web:
+    image: registry.tommynurwantoro.com/myporto-web:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        VITE_GOOGLE_CLIENT_ID: ${VITE_GOOGLE_CLIENT_ID:?Set VITE_GOOGLE_CLIENT_ID in .env}
+        VITE_API_BASE_URL: ${VITE_API_BASE_URL:-/api}
+        VITE_VERIFY_BASE_URL: ${VITE_VERIFY_BASE_URL:-https://tommynurwantoro.com}
+    expose:
+      - "3001"
+    depends_on:
+      api:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:3001/"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    restart: unless-stopped
+
+volumes:
+  pgdata:
+  uploads:

@@ -166,22 +166,64 @@ The production build will be generated in the `dist/` directory, optimized and r
 
 ## 🚢 Deployment
 
-### Static Hosting
+Full stack: **React SPA** (nginx) + **Go API** + **Postgres**, with optional **Traefik** for HTTPS.
 
-The project builds to static files that can be deployed to any static hosting service:
-
-- **Vercel**: Connect your repository for automatic deployments
-- **Netlify**: Drag and drop the `dist` folder or connect via Git
-- **GitHub Pages**: Use GitHub Actions to deploy
-- **AWS S3 + CloudFront**: Upload `dist` folder to S3 bucket
-
-### Docker
-
-A Dockerfile is included for containerized deployment:
+### 1. Configure environment
 
 ```bash
-docker build -t myporto .
-docker run -p 3000:80 myporto
+cp .env.example .env
+```
+
+Required in `.env`:
+
+| Variable | Purpose |
+|----------|---------|
+| `VITE_GOOGLE_CLIENT_ID` | Google OAuth (frontend, build-time) |
+| `GOOGLE_CLIENT_ID` | Same client ID (API, runtime) |
+| `JWT_SECRET` | Long random secret for API sessions |
+| `VITE_API_BASE_URL` | Use `/api` — browser hits nginx, nginx proxies internally |
+| `VITE_VERIFY_BASE_URL` | Public site URL for QR codes |
+
+Optional: set `DATABASE_URL` to use external Postgres. If unset, compose uses the bundled `postgres` service.
+
+### 2. Production (Traefik)
+
+Only the **web** container is public. Traefik routes all traffic to nginx; nginx proxies `/api/*` to the internal Go API. The API is not reachable from the internet.
+
+Requires an external Docker network named `traefik` (or set `TRAEFIK_NETWORK`).
+
+```bash
+docker compose -f docker-compose.yml -f docker-compose.traefik.yml up -d --build
+```
+
+See [nginx/traefik.md](nginx/traefik.md) for routing details.
+
+### 3. Local Docker (no Traefik)
+
+```bash
+docker compose -f docker-compose.yml -f docker-compose.local.yml up -d --build
+```
+
+- Frontend: http://localhost:3001 (nginx proxies `/api` → internal API)
+- Postgres: localhost:5433
+
+### 4. Frontend-only static hosting
+
+```bash
+npm run build
+```
+
+Deploy the `dist/` folder to Vercel, Netlify, etc. You still need the Go API running separately for `/sign` features.
+
+### Docker image only (web)
+
+```bash
+docker build \
+  --build-arg VITE_GOOGLE_CLIENT_ID=your-client-id \
+  --build-arg VITE_API_BASE_URL=/api \
+  --build-arg VITE_VERIFY_BASE_URL=https://your-domain.com \
+  -t myporto-web .
+docker run -p 3001:3001 myporto-web
 ```
 
 ## 🎯 Key Features Explained
